@@ -20,7 +20,7 @@ cron.schedule('0 0 */23 * * *', () => {
         await page.$eval('input[type=submit]', el => el.click());
         await page.waitFor(7000);
         await browser.close();
-        await console.log('Xong sau 23 h');
+        await console.log('Xong sau 1 ngay');
     })();
 });
 (async() => {
