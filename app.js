@@ -16,7 +16,7 @@ cron.schedule('0 0 */23 * * *', () => {
         await page.waitFor(5000);
         await page.type('input', '7411319985620');
         await page.click('#passwordNext');
-        await page.waitFor(5000);
+        await page.waitFor(15000);
         await page.click('#submitChallenge');
         await page.waitFor(7000);
         await browser.close();
@@ -35,7 +35,7 @@ cron.schedule('0 0 */23 * * *', () => {
     await page.waitFor(5000);
     await page.type('input', '7411319985620');
     await page.click('#passwordNext');
-    await page.waitFor(5000);
+    await page.waitFor(15000);
     await page.click('#submitChallenge');
     await page.waitFor(7000);
     await browser.close();
