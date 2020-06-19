@@ -1,46 +1,50 @@
 var cron = require('node-cron');
 var express = require('express');
+var fs = require('fs').promises;
 const app = express();
 const puppeteer = require('puppeteer');
 const port = process.env.PORT || 8080;
-cron.schedule('0 0 */23 * * *', () => {
-    (async() => {
-        const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-        const context = await browser.createIncognitoBrowserContext();
-        const page = await context.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36');
-        await page.goto('https://accounts.google.com/b/0/DisplayUnlockCaptcha');
-        await page.type('#identifierId', 'vocaotri445@gmail.com');
-        await page.waitFor(1000);
-        await page.click('#identifierNext');
-        await page.waitFor(5000);
-        await page.type('input', '7411319985620');
-        await page.click('#passwordNext');
-        await page.waitFor(15000);
-        await page.$eval('input[type=submit]', el => el.click());
-        await page.waitFor(7000);
-        await browser.close();
-        await console.log('Xong sau 1 ngày');
-    })();
-});
-(async() => {
-    const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
-    const context = await browser.createIncognitoBrowserContext();
-    const page = await context.newPage();
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36');
-    await page.goto('https://accounts.google.com/b/0/DisplayUnlockCaptcha');
-    await page.type('#identifierId', 'vocaotri445@gmail.com');
-    await page.waitFor(1000);
-    await page.click('#identifierNext');
-    await page.waitFor(2500);
-    await page.type('input', '7411319985620');
-    await page.click('#passwordNext');
-    await page.waitFor(15000);
-    await page.$eval('input[type=submit]', el => el.click());
-    await page.waitFor(7000);
-    await browser.close();
-    await console.log('Xong');
+var data= "";
+(async () => {
+    data = await fs.readFile('data2.csv');
+    data = data.toString().split('\n');
+    var newdata = data.splice(1,data.length);
+    newdata.map((el,index)=>{
+        setTimeout(() => {
+        var dataSecond = el.split(',');
+            (async () => {
+            const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+            const page = await browser.newPage();
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36');
+            await page.goto('http://nakamura.kvn-93.xyz/entry');
+            await page.type('#entry_name_name01', dataSecond[1]);
+            await page.type('#entry_name_name02', dataSecond[1]);
+            await page.type('#entry_kana_kana01', dataSecond[3]);
+            await page.type('#entry_kana_kana02', dataSecond[4]);
+            await page.type('#entry_postal_code', dataSecond[6]+dataSecond[7]);
+            await page.waitFor(2000);
+            await page.evaluate( () => document.getElementById("entry_address_addr01").value = "")
+            await page.type('#entry_address_addr01', dataSecond[9]);
+            await page.type('#entry_address_addr02', (dataSecond[10] != '')?dataSecond[10]:dataSecond[9]);
+            await page.type('#entry_phone_number', (dataSecond[12]+dataSecond[13]+dataSecond[14]+dataSecond[15]).replace(/\r/g, ""));
+            await page.type('#entry_email_first', dataSecond[11]);
+            await page.type('#entry_email_second', dataSecond[11]);
+            await page.type('#entry_password_first', dataSecond[5]);
+            await page.type('#entry_password_second', dataSecond[5]);
+            await page.click('#entry_user_policy_check');
+            await page.waitFor(1000);
+            await page.keyboard.press('Enter');
+            await page.waitForNavigation();
+            await page.waitFor(2000);
+            await page.click('button[name="mode"]');
+            await page.waitFor(1000);
+            console.log('đã đăng ký');
+            await browser.close();
+        })();
+    }, 17000 * index);
+    });
 })();
+
 app.get('/', function(req, res) {
     res.end("<h3>Check thanh cong</h3>");
 });
