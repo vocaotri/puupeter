@@ -21,7 +21,7 @@ var data= "";
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36');
             await page.goto('http://nakamura.kvn-93.xyz/entry');
             await page.type('#entry_name_name01', dataSecond[1]);
-            await page.type('#entry_name_name02', dataSecond[1]);
+            await page.type('#entry_name_name02', dataSecond[2]);
             await page.type('#entry_kana_kana01', dataSecond[3]);
             await page.type('#entry_kana_kana02', dataSecond[4]);
             await page.type('#entry_postal_code', dataSecond[6]+dataSecond[7]);
